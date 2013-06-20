@@ -10,16 +10,16 @@
   * Notes:
   * To interact with Twitter's API you will need to create an API KEY:
   * https://dev.twitter.com/apps
-  * After creating your API Key you will need to copy the following values into the class
+  * After creating your API Key you will need to pass the following values to the class
   * constructor: "Consumer key", "Consumer secret", "Access token", "Access token secret"
-  * --
-  * Caching is employed because Twitter rate limits how many times their feeds can be
-  * accessed per hour.
   * --
   * Options can be overridden by passing an array of key/value pairs to the class
   * constructor. At a minimum you must set the consumer_key, consumer_secret, access_token,
-  * access_token_secret and twitter_screen_name options. You may also need to change the
-  * cache_file option to point at a directory/file on your web server. 
+  * access_token_secret and twitter_screen_name options.
+  * --
+  * You may also need to change the cache_file option to point at a directory/file on your
+  * web server. Caching is employed because Twitter rate limits how many times their feeds
+  * can be accessed per hour.
   * 
   * Credits:
   * Feed parsing: https://github.com/themattharris/tmhOAuth
