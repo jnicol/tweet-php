@@ -1,0 +1,3 @@
+[submodule "tests/data/twitter-text-conformance"]
+	path = tests/data/twitter-text-conformance
+	url = git://github.com/mzsanford/twitter-text-conformance.git
