@@ -2,6 +2,16 @@
 
 A PHP class for fetching tweets from a Twitter user's timeline, and rendering them as an HTML list.
 
+## Features
+
+- Works with Twitter API v1.1
+- Tweets are cached to avoid exceeding Twitter’s API request rate limits
+- A fallback is provided in case the twitter feed fails to load
+- Retweets and @replies can optionally be ignored
+- A configuration parameter allows you to specify how many tweets are displayed
+- Dates can optionally be displayed in “Twitter style”, e.g. “12 minutes ago”
+- You can customize the HTML that wraps your tweets, tweet status and meta information
+
 ## Usage
 
 To interact with Twitter's API you will need to create an API KEY, which you can create at: https://dev.twitter.com/apps
