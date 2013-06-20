@@ -55,8 +55,9 @@ Here is a full list of options, and their default values:
     'tweet_wrap_open'       => '<li><span class="status">',
     'meta_wrap_open'        => '</span><span class="meta"> ',
     'meta_wrap_close'       => '</span>',
-    'tweet_wrap_close'      => '</li>'
-
+    'tweet_wrap_close'      => '</li>',
+    'error_message'         => 'Oops, our twitter feed is unavailable right now.',
+    'error_link_text'       => 'Follow us on Twitter'
 
 ## Caching
 

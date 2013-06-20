@@ -3,7 +3,7 @@
   * PHPTweet
   *
   * @author Jonathan Nicol @f6design
-  * @version 1.0.0
+  * @version 1.0.1
   * @license The MIT License http://opensource.org/licenses/mit-license.php
   * @link  http://f6design.com/journal/2010/10/07/display-recent-twitter-tweets-using-php/
   * 
@@ -58,7 +58,9 @@
           'tweet_wrap_open'       => '<li><span class="status">',
           'meta_wrap_open'        => '</span><span class="meta"> ',
           'meta_wrap_close'       => '</span>',
-          'tweet_wrap_close'      => '</li>'
+          'tweet_wrap_close'      => '</li>',
+          'error_message'         => 'Oops, our twitter feed is unavailable right now.',
+          'error_link_text'       => 'Follow us on Twitter'
         ),
         $options
       );
@@ -75,10 +77,13 @@
 
       // In case the feed did not parse or load correctly, show a link to the Twitter account.
       if (!$this->tweet_found){
-        $this->tweet_list = $twitter_wrap_open.$tweet_wrap_open.'Oops, our twitter feed is unavailable right now. '.$meta_wrap_open.'<a href="http://twitter.com/'.$twitter_user_id.'">Follow us on Twitter</a>'.$meta_wrap_close.$tweet_wrap_close.$twitter_wrap_close;
+        $this->tweet_list = $twitter_wrap_open . $tweet_wrap_open . $this->options['error_message'] . ' ' . $meta_wrap_open.'<a href="http://twitter.com/' . $this->options['twitter_screen_name'] . '">' . $this->options['error_link_text'] . '</a>' . $meta_wrap_close . $tweet_wrap_close . $twitter_wrap_close;
       }
     }
 
+    /**
+     * Fetch tweets using Twitter API
+     */
     private function fetch_tweets () {
       // Creates a tmhOAuth object.
       $this->tmhOAuth = new tmhOAuth(array(
@@ -129,11 +134,16 @@
       }
     }
 
+    /**
+     * Parse an individual tweet
+     */
     private function parse_tweet ($tweet) {
       $this->tweet_found = true;
       $this->tweet_count++;
 
       $tweet_text_raw = $tweet['text'];
+
+      // Convert usernames, hashtags and URLs to links
       $tweet_text = Twitter_Autolink::create($tweet_text_raw, false)
         ->setNoFollow(false)->setExternal(false)->setTarget('')
         ->setUsernameClass('')
@@ -173,6 +183,9 @@
       return $this->options['tweet_wrap_open'] . $tweet_text . $this->options['meta_wrap_open'] . '<a href="' . $href . '">' . $display_time . '</a>' . $this->options['meta_wrap_close'] . $this->options['tweet_wrap_close'];
     }
 
+    /**
+     * Get tweet list HTML
+     */
     public function get_tweet_list () {
       return $this->tweet_list;
     }
