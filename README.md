@@ -24,7 +24,7 @@ This will load and parse the user timeline. Then you can display the results lik
 
 ## Options
 
-Options can be overridden by passing an array of key/value pairs to the class constructor. At a minimum you must set the consumer_key, consumer_secret, access_token, access_token_secret and twitter_screen_name options, as shown above.
+Options can be overridden by passing an array of key/value pairs to the class constructor. At a minimum you must set the `consumer_key`, `consumer_secret`, `access_token`, `access_token_secret` and `twitter_screen_name` options, as shown above.
 
 Here is a full list of options, and their default values:
 
@@ -54,9 +54,10 @@ Caching is employed because Twitter rate limits how many times their feeds can b
 
 When the user timeline is first loaded, the resultant HTML list is saved as a text file on your web server. The default location for this file is: `./twitter.txt`
 
-You can change this file path by setting the `cache_file` option:
+You can change this file path by setting the `cache_file` option.
 
 ## Credits:
 
 Feed parsing uses [tmhOAuth] (https://github.com/themattharris/tmhOAuth)
+
 Hashtag/username parsing uses [twitter-text-php] (https://github.com/mikenz/twitter-text-php)
