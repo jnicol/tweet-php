@@ -58,6 +58,5 @@ You can change this file path by setting the `cache_file` option.
 
 ## Credits:
 
-Feed parsing uses [tmhOAuth] (https://github.com/themattharris/tmhOAuth)
-
-Hashtag/username parsing uses [twitter-text-php] (https://github.com/mikenz/twitter-text-php)
+- Feed parsing uses Matt Harris' [tmhOAuth] (https://github.com/themattharris/tmhOAuth)
+- Hashtag/username parsing uses Mike Cochrane's [twitter-text-php] (https://github.com/mikenz/twitter-text-php)
