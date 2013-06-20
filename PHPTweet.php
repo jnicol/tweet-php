@@ -4,7 +4,7 @@
   *
   * @author Jonathan Nicol @f6design
   * @version 1.0.0
-  * @license The MIT LIcense http://opensource.org/licenses/mit-license.php
+  * @license The MIT License http://opensource.org/licenses/mit-license.php
   * @link  http://f6design.com/journal/2010/10/07/display-recent-twitter-tweets-using-php/
   * 
   * Notes:
@@ -68,7 +68,6 @@
       // Show file from cache if still valid.
       if (time() - $this->options['cachetime'] < $cache_file_timestamp) {
         $this->tweet_found = true;
-        // Display tweets from the cache.
         $this->tweet_list = file_get_contents($this->options['cache_file']);  
       } else {
         $this->fetch_tweets();
@@ -178,3 +177,4 @@
       return $this->tweet_list;
     }
 }
+?>
