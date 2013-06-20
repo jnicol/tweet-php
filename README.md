@@ -8,7 +8,7 @@ To interact with Twitter's API you will need to create an API KEY, which you can
 
 After creating your API Key you will need to take note of following values: "Consumer key", "Consumer secret", "Access token", "Access token secret"
 
-Those values can be copied to the class constructor, along with the Twitter screen name you wish to query:
+Those values can be passed as options to the class constructor, along with the Twitter screen name you wish to query:
 
     $PHPTweet = new PHPTweet(array(
       'consumer_key'              => 'xxxxxxxxxxxxxxxxxxxxx',
