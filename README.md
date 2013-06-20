@@ -6,7 +6,7 @@ A PHP class for fetching tweets from a Twitter user's timeline, and rendering th
 
 To interact with Twitter's API you will need to create an API KEY, which you can create at: https://dev.twitter.com/apps
 
-After creating your API Key you will need to copy the following values into the class constructor: "Consumer key", "Consumer secret", "Access token", "Access token secret"
+After creating your API Key you will need to take note of following values: "Consumer key", "Consumer secret", "Access token", "Access token secret"
 
 Those values can be copied to the class constructor, along with the Twitter screen name you wish to query:
 
@@ -18,7 +18,7 @@ Those values can be copied to the class constructor, along with the Twitter scre
       'twitter_screen_name'       => 'yourusername'
     ));
 
-This will load and parse the user timeline. Then you can display the results like so:
+Then you can display the results like so:
 
     echo $PHPTweet->get_tweet_list();
 
