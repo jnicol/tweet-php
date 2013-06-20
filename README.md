@@ -1,4 +1,4 @@
-# PHPTweet
+# TweetPHP
 
 A PHP class for fetching tweets from a Twitter user's timeline, and rendering them as an HTML list.
 
@@ -20,7 +20,7 @@ After creating your API Key you will need to take note of following values: "Con
 
 Those values can be passed as options to the class constructor, along with the Twitter screen name you wish to query:
 
-    $PHPTweet = new PHPTweet(array(
+    $TweetPHP = new TweetPHP(array(
       'consumer_key'              => 'xxxxxxxxxxxxxxxxxxxxx',
       'consumer_secret'           => 'xxxxxxxxxxxxxxxxxxxxx',
       'access_token'              => 'xxxxxxxxxxxxxxxxxxxxx',
@@ -30,7 +30,7 @@ Those values can be passed as options to the class constructor, along with the T
 
 Then you can display the results like so:
 
-    echo $PHPTweet->get_tweet_list();
+    echo $TweetPHP->get_tweet_list();
 
 ## Options
 

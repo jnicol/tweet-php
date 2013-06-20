@@ -1,11 +1,11 @@
 <?php
  /**
-  * PHPTweet
+  * TweetPHP
   *
   * @author Jonathan Nicol @f6design
-  * @version 1.0.1
+  * @version 1.0.2
   * @license The MIT License http://opensource.org/licenses/mit-license.php
-  * @link  http://f6design.com/journal/2010/10/07/display-recent-twitter-tweets-using-php/
+  * @link  http://f6design.com/journal/2013/06/20/tweetphp-display-tweets-on-your-website-using-php/
   * 
   * Notes:
   * To interact with Twitter's API you will need to create an API KEY:
@@ -25,7 +25,7 @@
   * Feed parsing: https://github.com/themattharris/tmhOAuth
   * Hashtag/username parsing: https://github.com/mikenz/twitter-text-php
   */
- class PHPTweet {
+ class TweetPHP {
     private $tmhOAuth;
     private $options;
     private $tweet_found = false;
@@ -33,7 +33,7 @@
     private $tweet_list;
 
     /**
-     * Initialize a new PHPTweet object
+     * Initialize a new TweetPHP object
      */
     public function  __construct ($options = array()) {
       require_once "lib/tmhOAuth/tmhOAuth.php";
