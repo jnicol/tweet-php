@@ -127,12 +127,12 @@
         // Close the twitter wrapping element.
         $html .= $this->options['twitter_wrap_close'];
 
-        // Save the contents formatted tweet list to a file. 
+        // Save the formatted tweet list to a file. 
         $file = fopen($this->options['cache_file'], 'w');
         fwrite($file, $html); 
         fclose($file);
 
-        // Save the contents formatted tweet list to a file. 
+        // Save the raw data array to a file. 
         $file = fopen($this->options['cache_file_raw'], 'w');
         fwrite($file, serialize($data)); 
         fclose($file);
