@@ -78,7 +78,7 @@ You can change these file paths using the `cache_file` and `cache_file_raw` opti
 
 ### autolink
 
-Pass raw tweet text to the method and  it will convert all usernames, hashtags and URLs to HTML links. 
+Pass raw tweet text to `autolink()` and  it will convert all usernames, hashtags and URLs to HTML links. 
 
     $autolinked_tweet = autolink($tweet);
 
