@@ -149,9 +149,8 @@
       $this->tweet_found = true;
       $this->tweet_count++;
 
+      // Format tweet text
       $tweet_text_raw = $tweet['text'];
-
-      // Convert usernames, hashtags and URLs to links
       $tweet_text = $this->autolink($tweet_text_raw);
 
       $tweet_time = strtotime($tweet['created_at']);
