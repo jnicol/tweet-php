@@ -3,7 +3,7 @@
   * TweetPHP
   *
   * @author Jonathan Nicol @f6design
-  * @version 1.0.2
+  * @version 1.0.3
   * @license The MIT License http://opensource.org/licenses/mit-license.php
   * @link  http://f6design.com/journal/2013/06/20/tweetphp-display-tweets-on-your-website-using-php/
   * 
@@ -77,7 +77,7 @@
 
       // In case the feed did not parse or load correctly, show a link to the Twitter account.
       if (!$this->tweet_found){
-        $this->tweet_list = $twitter_wrap_open . $tweet_wrap_open . $this->options['error_message'] . ' ' . $meta_wrap_open.'<a href="http://twitter.com/' . $this->options['twitter_screen_name'] . '">' . $this->options['error_link_text'] . '</a>' . $meta_wrap_close . $tweet_wrap_close . $twitter_wrap_close;
+        $this->tweet_list = $this->options['twitter_wrap_open'] . $this->options['tweet_wrap_open'] . $this->options['error_message'] . ' ' . $this->options['meta_wrap_open'] .'<a href="http://twitter.com/' . $this->options['twitter_screen_name'] . '">' . $this->options['error_link_text'] . '</a>' . $this->options['meta_wrap_close'] . $this->options['tweet_wrap_close'] . $this->options['twitter_wrap_close'];
       }
     }
 
@@ -109,7 +109,7 @@
         $data = json_decode($this->tmhOAuth->response['response'], true);
 
         // Open the twitter wrapping element.
-        $html = $twitter_wrap_open;
+        $html = $this->options['twitter_wrap_open'];
 
         // Iterate over tweets.
         foreach($data as $tweet) {
@@ -121,7 +121,7 @@
         }
 
         // Close the twitter wrapping element.
-        $html .= $twitter_wrap_close;
+        $html .= $this->options['twitter_wrap_close'];
 
         // Generate a new cache file.
         $file = fopen($this->options['cache_file'], 'w');
