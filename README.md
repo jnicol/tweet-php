@@ -14,7 +14,7 @@ A PHP class for fetching tweets from a Twitter user's timeline, and rendering th
 
 ## Usage
 
-To interact with Twitter's API you will need to create an API KEY, which you can create at: https://dev.twitter.com/apps
+To interact with Twitter's API you will need an API KEY, which you can create at: https://dev.twitter.com/apps
 
 After creating your API Key you will need to take note of following values: "Consumer key", "Consumer secret", "Access token", "Access token secret"
 
@@ -84,7 +84,7 @@ Pass raw tweet text to `autolink()` and  it will convert all usernames, hashtags
 
 This might be handy if you want to process tweets yourself, using the array returned by `get_tweet_array()`.
 
-## Credits:
+## Credits
 
 - Feed parsing uses Matt Harris' [tmhOAuth](https://github.com/themattharris/tmhOAuth)
 - Hashtag/username parsing uses Mike Cochrane's [twitter-text-php](https://github.com/mikenz/twitter-text-php)
