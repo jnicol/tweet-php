@@ -32,7 +32,7 @@ Then you can display the results like so:
 
     echo $TweetPHP->get_tweet_list();
 
-You can also retreive the raw data retrieved from Twitter:
+You can also retreive the raw data received from Twitter:
 
     $tweet_array = $TweetPHP->get_tweet_array();
 
