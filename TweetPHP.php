@@ -31,13 +31,13 @@
     private $tweet_found = false;
     private $tweet_count = 0;
     private $tweet_list;
+    private $tweet_array;
 
     /**
      * Initialize a new TweetPHP object
      */
     public function  __construct ($options = array()) {
       require_once "lib/tmhOAuth/tmhOAuth.php";
-      require_once "lib/twitter-text-php/lib/Twitter/Autolink.php";
 
       $this->options = array_merge(
       array(
@@ -46,13 +46,15 @@
           'access_token'          => '',
           'access_token_secret'   => '',
           'twitter_screen_name'   => '',
-          'cache_file'            => './twitter.txt', // Where on the server to save the cached tweets
+          'cache_file'            => './twitter.txt', // Where on the server to save the cached formatted tweets
+          'cache_file_raw'        => './twitter-array.txt', // Where on the server to save the cached raw tweets
           'cachetime'             => 60 * 60, // Seconds to cache feed (1 hour).
           'tweets_to_display'     => 10, // How many tweets to fetch
           'ignore_replies'        => true, // Ignore @replies
           'ignore_retweets'       => true, // Ignore retweets
           'twitter_style_dates'   => false, // Use twitter style dates e.g. 2 hours ago
           'date_format'           => 'g:i A M jS', // The dafult date format e.g. 12:08 PM Jun 12th
+          'format'                => 'html', // Can be 'html' or 'array'
           'twitter_wrap_open'     => '<h2>Latest tweets</h2><ul id="twitter">',
           'twitter_wrap_close'    => '</ul>',
           'tweet_wrap_open'       => '<li><span class="status">',
@@ -71,6 +73,7 @@
       if (time() - $this->options['cachetime'] < $cache_file_timestamp) {
         $this->tweet_found = true;
         $this->tweet_list = file_get_contents($this->options['cache_file']);  
+        $this->tweet_array = unserialize(file_get_contents($this->options['cache_file_raw']));
       } else {
         $this->fetch_tweets();
       }
@@ -78,6 +81,7 @@
       // In case the feed did not parse or load correctly, show a link to the Twitter account.
       if (!$this->tweet_found){
         $this->tweet_list = $this->options['twitter_wrap_open'] . $this->options['tweet_wrap_open'] . $this->options['error_message'] . ' ' . $this->options['meta_wrap_open'] .'<a href="http://twitter.com/' . $this->options['twitter_screen_name'] . '">' . $this->options['error_link_text'] . '</a>' . $this->options['meta_wrap_close'] . $this->options['tweet_wrap_close'] . $this->options['twitter_wrap_close'];
+        $this->tweet_array = array('Error fetching or loading tweets');
       }
     }
 
@@ -123,14 +127,18 @@
         // Close the twitter wrapping element.
         $html .= $this->options['twitter_wrap_close'];
 
-        // Generate a new cache file.
+        // Save the contents formatted tweet list to a file. 
         $file = fopen($this->options['cache_file'], 'w');
-
-        // Save the contents of output buffer to the file, and flush the buffer. 
         fwrite($file, $html); 
         fclose($file);
 
+        // Save the contents formatted tweet list to a file. 
+        $file = fopen($this->options['cache_file_raw'], 'w');
+        fwrite($file, serialize($data)); 
+        fclose($file);
+
         $this->tweet_list = $html;
+        $this->tweet_array = $data;
       }
     }
 
@@ -144,12 +152,7 @@
       $tweet_text_raw = $tweet['text'];
 
       // Convert usernames, hashtags and URLs to links
-      $tweet_text = Twitter_Autolink::create($tweet_text_raw, false)
-        ->setNoFollow(false)->setExternal(false)->setTarget('')
-        ->setUsernameClass('')
-        ->setHashtagClass('')
-        ->setURLClass('')
-        ->addLinks();
+      $tweet_text = $this->autolink($tweet_text_raw);
 
       $tweet_time = strtotime($tweet['created_at']);
 
@@ -184,10 +187,35 @@
     }
 
     /**
-     * Get tweet list HTML
+     * Helper function to convert usernames, hashtags and URLs
+     * in a tweet to HTML links.
+     */
+    public function autolink ($tweet) {
+      require_once "lib/twitter-text-php/lib/Twitter/Autolink.php";
+
+      $autolinked_tweet = Twitter_Autolink::create($tweet, false)
+        ->setNoFollow(false)->setExternal(false)->setTarget('')
+        ->setUsernameClass('')
+        ->setHashtagClass('')
+        ->setURLClass('')
+        ->addLinks();
+
+      return $autolinked_tweet;
+    }
+
+    /**
+     * Get tweets as HTML list
      */
     public function get_tweet_list () {
       return $this->tweet_list;
     }
+
+    /**
+     * Get tweets as an array
+     */
+    public function get_tweet_array () {
+      return $this->tweet_array;
+    }
+
 }
 ?>
