@@ -32,6 +32,10 @@ Then you can display the results like so:
 
     echo $TweetPHP->get_tweet_list();
 
+You can also retreive the raw data retrieved from Twitter:
+
+    $tweet_array = $TweetPHP->get_tweet_array();
+
 ## Options
 
 Options can be overridden by passing an array of key/value pairs to the class constructor. At a minimum you must set the `consumer_key`, `consumer_secret`, `access_token`, `access_token_secret` and `twitter_screen_name` options, as shown above.
@@ -43,7 +47,8 @@ Here is a full list of options, and their default values:
     'access_token'          => '',
     'access_token_secret'   => '',
     'twitter_screen_name'   => '',
-    'cache_file'            => './twitter.txt', // Where on the server to save the cached tweets
+    'cache_file'            => './twitter.txt', // Where on the server to save the cached formatted tweets
+    'cache_file_raw'        => './twitter-array.txt', // Where on the server to save the cached raw tweets
     'cachetime'             => 60 * 60, // Seconds to cache feed (1 hour).
     'tweets_to_display'     => 10, // How many tweets to fetch
     'ignore_replies'        => true, // Ignore @replies
@@ -65,9 +70,21 @@ Caching is employed because Twitter rate limits how many times their feeds can b
 
 When the user timeline is first loaded, the resultant HTML list is saved as a text file on your web server. The default location for this file is: `./twitter.txt`
 
-You can change this file path by setting the `cache_file` option.
+The raw Twitter response is saved as a serialized array in: `./twitter-array.txt`
+
+You can change these file paths using the `cache_file` and `cache_file_raw` options.
+
+## Helper methods
+
+### autolink
+
+Pass raw tweet text to the method and  it will convert all usernames, hashtags and URLs to HTML links. 
+
+    $autolinked_tweet = autolink($tweet);
+
+This might be handy if you want to process tweets yourself, using the array returned by `get_tweet_array()`.
 
 ## Credits:
 
-- Feed parsing uses Matt Harris' [tmhOAuth] (https://github.com/themattharris/tmhOAuth)
-- Hashtag/username parsing uses Mike Cochrane's [twitter-text-php] (https://github.com/mikenz/twitter-text-php)
+- Feed parsing uses Matt Harris' [tmhOAuth](https://github.com/themattharris/tmhOAuth)
+- Hashtag/username parsing uses Mike Cochrane's [twitter-text-php](https://github.com/mikenz/twitter-text-php)
