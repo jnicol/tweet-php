@@ -74,6 +74,15 @@ The raw Twitter response is saved as a serialized array in: `./twitter-array.txt
 
 You can change these file paths using the `cache_file` and `cache_file_raw` options.
 
+## Debugging
+
+If you are experiencing problems using the plugin please set the `debug` option to `true`. This will set PHP's error reporting level to `E_ALL`, and will also display informative debugging messages before the tweets are rendered.
+
+You can also fetch the debugging as an array or HTML list, even when the `debug` option is set to `false`:
+
+    echo $TweetPHP->get_debug_list();
+    $debug_array = $TweetPHP->get_debug_array();
+
 ## Helper methods
 
 ### autolink
