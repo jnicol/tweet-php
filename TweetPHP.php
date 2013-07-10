@@ -32,6 +32,7 @@
     private $tweet_count = 0;
     private $tweet_list;
     private $tweet_array;
+    private $debug_report = array();
 
     /**
      * Initialize a new TweetPHP object
@@ -62,24 +63,34 @@
           'meta_wrap_close'       => '</span>',
           'tweet_wrap_close'      => '</li>',
           'error_message'         => 'Oops, our twitter feed is unavailable right now.',
-          'error_link_text'       => 'Follow us on Twitter'
+          'error_link_text'       => 'Follow us on Twitter',
+          'debug'                 => false
         ),
         $options
       );
 
+      if ($this->options['debug']) {
+        error_reporting(E_ALL);
+      }
+
       $cache_file_timestamp = ((file_exists($this->options['cache_file']))) ? filemtime($this->options['cache_file']) : 0;
+      $this->add_debug_item('Cache expiration timestamp: ' . (time() - $this->options['cachetime']));
+      $this->add_debug_item('Cache file timestamp: ' . $cache_file_timestamp);
 
       // Show file from cache if still valid.
       if (time() - $this->options['cachetime'] < $cache_file_timestamp) {
         $this->tweet_found = true;
+        $this->add_debug_item('Cache file is newer than cachetime.');
         $this->tweet_list = file_get_contents($this->options['cache_file']);  
         $this->tweet_array = unserialize(file_get_contents($this->options['cache_file_raw']));
       } else {
+        $this->add_debug_item("Cache file doesn't exist or is older than cachetime.");
         $this->fetch_tweets();
       }
 
       // In case the feed did not parse or load correctly, show a link to the Twitter account.
-      if (!$this->tweet_found){
+      if (!$this->tweet_found) {
+        $this->add_debug_item('No tweets were found. error_message will be displayed.');
         $this->tweet_list = $this->options['twitter_wrap_open'] . $this->options['tweet_wrap_open'] . $this->options['error_message'] . ' ' . $this->options['meta_wrap_open'] .'<a href="http://twitter.com/' . $this->options['twitter_screen_name'] . '">' . $this->options['error_link_text'] . '</a>' . $this->options['meta_wrap_close'] . $this->options['tweet_wrap_close'] . $this->options['twitter_wrap_close'];
         $this->tweet_array = array('Error fetching or loading tweets');
       }
@@ -89,6 +100,7 @@
      * Fetch tweets using Twitter API
      */
     private function fetch_tweets () {
+      $this->add_debug_item('Fetching fresh tweets using Twitter API.');
       // Creates a tmhOAuth object.
       $this->tmhOAuth = new tmhOAuth(array(
         'consumer_key'    => $this->options['consumer_key'],
@@ -108,6 +120,8 @@
         $params['exclude_replies'] = 'true';
       }
       $response_code = $this->tmhOAuth->request('GET', $this->tmhOAuth->url('1.1/statuses/user_timeline.json'), $params);
+
+      $this->add_debug_item('tmhOAuth response code: ' . $response_code);
       
       if ($response_code == 200) {
         $data = json_decode($this->tmhOAuth->response['response'], true);
@@ -139,6 +153,8 @@
 
         $this->tweet_list = $html;
         $this->tweet_array = $data;
+      } else {
+        $this->add_debug_item('Bad tmhOAuth response code.');
       }
     }
 
@@ -186,6 +202,32 @@
     }
 
     /**
+     * Add a debuggin item.
+     */
+    private function add_debug_item ($msg) {
+      array_push($this->debug_report, $msg);
+    }
+
+    /**
+     * Get debugging information as an HTML list.
+     */
+    public function get_debug_list () {
+      $debug_list = '<ul>';
+      foreach($this->debug_report as $debug_item) {
+        $debug_list .= '<li>' . $debug_item . '</li>';
+      }
+      $debug_list .= '</ul>';
+      return $debug_list;
+    }
+
+    /**
+     * Get debugging information as an array.
+     */
+    public function get_debug_array () {
+      return $this->debug_report;
+    }
+
+    /**
      * Helper function to convert usernames, hashtags and URLs
      * in a tweet to HTML links.
      */
@@ -206,7 +248,11 @@
      * Get tweets as HTML list
      */
     public function get_tweet_list () {
-      return $this->tweet_list;
+      if ($this->options['debug']) {
+        return $this->get_debug_list() . $this->tweet_list;
+      } else {
+        return $this->tweet_list;
+      }
     }
 
     /**
