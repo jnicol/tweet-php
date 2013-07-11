@@ -38,7 +38,6 @@
      * Initialize a new TweetPHP object
      */
     public function  __construct ($options = array()) {
-      require_once "lib/tmhOAuth/tmhOAuth.php";
 
       $this->options = array_merge(
       array(
@@ -47,8 +46,8 @@
           'access_token'          => '',
           'access_token_secret'   => '',
           'twitter_screen_name'   => '',
-          'cache_file'            => './twitter.txt', // Where on the server to save the cached formatted tweets
-          'cache_file_raw'        => './twitter-array.txt', // Where on the server to save the cached raw tweets
+          'cache_file'            => dirname(__FILE__) . '/cache/twitter.txt', // Where on the server to save the cached formatted tweets
+          'cache_file_raw'        => dirname(__FILE__) . '/cache/twitter-array.txt', // Where on the server to save the cached raw tweets
           'cachetime'             => 60 * 60, // Seconds to cache feed (1 hour).
           'tweets_to_display'     => 10, // How many tweets to fetch
           'ignore_replies'        => true, // Ignore @replies
@@ -101,6 +100,9 @@
      */
     private function fetch_tweets () {
       $this->add_debug_item('Fetching fresh tweets using Twitter API.');
+
+      require_once(dirname(__FILE__) . '/lib/tmhOAuth/tmhOAuth.php');
+      
       // Creates a tmhOAuth object.
       $this->tmhOAuth = new tmhOAuth(array(
         'consumer_key'    => $this->options['consumer_key'],
@@ -232,7 +234,7 @@
      * in a tweet to HTML links.
      */
     public function autolink ($tweet) {
-      require_once "lib/twitter-text-php/lib/Twitter/Autolink.php";
+      require_once(dirname(__FILE__) . '/lib/twitter-text-php/lib/Twitter/Autolink.php');
 
       $autolinked_tweet = Twitter_Autolink::create($tweet, false)
         ->setNoFollow(false)->setExternal(false)->setTarget('')
