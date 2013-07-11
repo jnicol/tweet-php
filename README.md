@@ -47,14 +47,15 @@ Here is a full list of options, and their default values:
     'access_token'          => '',
     'access_token_secret'   => '',
     'twitter_screen_name'   => '',
-    'cache_file'            => './twitter.txt', // Where on the server to save the cached formatted tweets
-    'cache_file_raw'        => './twitter-array.txt', // Where on the server to save the cached raw tweets
+    'cache_file'            => dirname(__FILE__) . '/cache/twitter.txt', // Where on the server to save the cached formatted tweets
+    'cache_file_raw'        => dirname(__FILE__) . '/cache/twitter-array.txt', // Where on the server to save the cached raw tweets
     'cachetime'             => 60 * 60, // Seconds to cache feed (1 hour).
     'tweets_to_display'     => 10, // How many tweets to fetch
     'ignore_replies'        => true, // Ignore @replies
     'ignore_retweets'       => true, // Ignore retweets
     'twitter_style_dates'   => false, // Use twitter style dates e.g. 2 hours ago
     'date_format'           => 'g:i A M jS', // The dafult date format e.g. 12:08 PM Jun 12th
+    'format'                => 'html', // Can be 'html' or 'array'
     'twitter_wrap_open'     => '<h2>Latest tweets</h2><ul id="twitter">',
     'twitter_wrap_close'    => '</ul>',
     'tweet_wrap_open'       => '<li><span class="status">',
@@ -62,15 +63,16 @@ Here is a full list of options, and their default values:
     'meta_wrap_close'       => '</span>',
     'tweet_wrap_close'      => '</li>',
     'error_message'         => 'Oops, our twitter feed is unavailable right now.',
-    'error_link_text'       => 'Follow us on Twitter'
+    'error_link_text'       => 'Follow us on Twitter',
+    'debug'                 => false
 
 ## Caching
 
 Caching is employed because Twitter rate limits how many times their feeds can be accessed per hour.
 
-When the user timeline is first loaded, the resultant HTML list is saved as a text file on your web server. The default location for this file is: `./twitter.txt`
+When the user timeline is first loaded, the resultant HTML list is saved as a text file on your web server. The default location for this file is: `cache/twitter.txt`
 
-The raw Twitter response is saved as a serialized array in: `./twitter-array.txt`
+The raw Twitter response is saved as a serialized array in: `cache/twitter-array.txt`
 
 You can change these file paths using the `cache_file` and `cache_file_raw` options.
 
