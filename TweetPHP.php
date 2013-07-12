@@ -53,7 +53,9 @@
           'ignore_replies'        => true, // Ignore @replies
           'ignore_retweets'       => true, // Ignore retweets
           'twitter_style_dates'   => false, // Use twitter style dates e.g. 2 hours ago
-          'date_format'           => 'g:i A M jS', // The dafult date format e.g. 12:08 PM Jun 12th
+          'twitter_date_text'     => array('seconds ago', 'minutes ago', 'about', 'hour', 'ago'),
+          'date_format'           => '%I:%M %p %b %d%O', // The defult date format e.g. 12:08 PM Jun 12th. See: http://php.net/manual/en/function.strftime.php
+          'date_lang'             => null, // Language for date e.g. 'fr_FR'. See: http://php.net/manual/en/function.setlocale.php
           'format'                => 'html', // Can be 'html' or 'array'
           'twitter_wrap_open'     => '<h2>Latest tweets</h2><ul id="twitter">',
           'twitter_wrap_close'    => '</ul>',
@@ -70,6 +72,10 @@
 
       if ($this->options['debug']) {
         error_reporting(E_ALL);
+      }
+
+      if ($this->options['date_lang']) {
+        setlocale(LC_ALL, $this->options['date_lang']);
       }
 
       $cache_file_timestamp = ((file_exists($this->options['cache_file']))) ? filemtime($this->options['cache_file']) : 0;
@@ -179,24 +185,26 @@
         $time_diff = abs($current_time - $tweet_time);
         switch ($time_diff) {
           case ($time_diff < 60):
-            $display_time = $time_diff . ' seconds ago';
+            $display_time = $time_diff . ' ' . $this->options['twitter_date_text'][0] . ' ' . $this->options['twitter_date_text'][4];
             break;      
           case ($time_diff >= 60 && $time_diff < 3600):
             $min = floor($time_diff/60);
-            $display_time = $min . ' minutes ago';
+            $display_time = $min . ' ' . $this->options['twitter_date_text'][1] . ' ' . $this->options['twitter_date_text'][4];
             break;      
           case ($time_diff >= 3600 && $time_diff < 86400):
             $hour = floor($time_diff/3600);
-            $display_time = 'about ' . $hour . ' hour';
+            $display_time = $this->options['twitter_date_text'][2] . ' ' . $hour . ' ' . $this->options['twitter_date_text'][3];
             if ($hour > 1){ $display_time .= 's'; }
-            $display_time .= ' ago';
+            $display_time .= ' ' . $this->options['twitter_date_text'][4];
             break;          
-          default:
-            $display_time = date($this->options['date_format'], $tweet_time);
+          default: 
+            $format = str_replace('%O', date('S', $tweet_time), $this->options['date_format']);
+            $display_time = strftime($format, $tweet_time);
             break;
         }
       } else {
-        $display_time = date($this->options['date_format'], $tweet_time);
+        $format = str_replace('%O', date('S', $tweet_time), $this->options['date_format']);
+        $display_time = strftime($format, $tweet_time);
       }
 
       $href = 'http://twitter.com/' . $tweet['user']['screen_name'] . '/status/' . $tweet['id_str'];
