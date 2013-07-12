@@ -54,7 +54,7 @@ Here is a full list of options, and their default values:
     'ignore_replies'        => true, // Ignore @replies
     'ignore_retweets'       => true, // Ignore retweets
     'twitter_style_dates'   => false, // Use twitter style dates e.g. 2 hours ago
-    'twitter_date_text'     => array('seconds ago', 'minutes ago', 'about', 'hour', 'ago'),
+    'twitter_date_text'     => array('seconds', 'minutes', 'about', 'hour', 'ago'),
     'date_format'           => '%I:%M %p %b %d%O', // The defult date format e.g. 12:08 PM Jun 12th. See: http://php.net/manual/en/function.strftime.php
     'date_lang'             => null, // Language for date e.g. 'fr_FR'. See: http://php.net/manual/en/function.setlocale.php
     'format'                => 'html', // Can be 'html' or 'array'
