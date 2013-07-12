@@ -76,7 +76,9 @@ When the user timeline is first loaded, the resultant HTML list is saved as a te
 
 The raw Twitter response is saved as a serialized array in: `cache/twitter-array.txt`
 
-You can change these file paths using the `cache_file` and `cache_file_raw` options.
+You can change these file paths using the `cache_file` and `cache_file_raw` options. For example to set a path from your root public directory try:
+
+    $_SERVER['DOCUMENT_ROOT'] . '/path/to/my/cache/dir/filename.txt'
 
 ## Debugging
 
