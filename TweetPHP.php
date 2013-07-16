@@ -177,7 +177,9 @@
       $tweet_text_raw = $tweet['text'];
       $tweet_text = $this->autolink($tweet_text_raw);
 
-      $tweet_time = strtotime($tweet['created_at']);
+      // Tweet date is in GMT. Convert to UNIX timestamp in the local time of the tweeter.
+      $utc_offset = $tweet['user']['utc_offset'];
+      $tweet_time = strtotime($tweet['created_at']) + $utc_offset;
 
       if ($this->options['twitter_style_dates']){
         // Convert tweet timestamp into Twitter style date ("About 2 hours ago")
