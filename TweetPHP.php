@@ -6,7 +6,7 @@
   * @version 1.0.6
   * @license The MIT License http://opensource.org/licenses/mit-license.php
   * @link  http://f6design.com/journal/2013/06/20/tweetphp-display-tweets-on-your-website-using-php/
-  * 
+  *
   * Notes:
   * To interact with Twitter's API you will need to create an API KEY:
   * https://dev.twitter.com/apps
@@ -20,7 +20,7 @@
   * You may also need to change the cache_file option to point at a directory/file on your
   * web server. Caching is employed because Twitter rate limits how many times their feeds
   * can be accessed per hour.
-  * 
+  *
   * Credits:
   * Feed parsing: https://github.com/themattharris/tmhOAuth
   * Hashtag/username parsing: https://github.com/mikenz/twitter-text-php
@@ -49,7 +49,8 @@
           'cache_file'            => dirname(__FILE__) . '/cache/twitter.txt', // Where on the server to save the cached formatted tweets
           'cache_file_raw'        => dirname(__FILE__) . '/cache/twitter-array.txt', // Where on the server to save the cached raw tweets
           'cachetime'             => 60 * 60, // Seconds to cache feed (1 hour).
-          'tweets_to_display'     => 10, // How many tweets to fetch
+          'tweets_to_retrieve'    => 25, // Specifies the number of tweets to try and fetch, up to a maximum of 200
+          'tweets_to_display'     => 10, // Number of tweets to display
           'ignore_replies'        => true, // Ignore @replies
           'ignore_retweets'       => true, // Ignore retweets
           'twitter_style_dates'   => false, // Use twitter style dates e.g. 2 hours ago
@@ -86,7 +87,7 @@
       if (time() - $this->options['cachetime'] < $cache_file_timestamp) {
         $this->tweet_found = true;
         $this->add_debug_item('Cache file is newer than cachetime.');
-        $this->tweet_list = file_get_contents($this->options['cache_file']);  
+        $this->tweet_list = file_get_contents($this->options['cache_file']);
         $this->tweet_array = unserialize(file_get_contents($this->options['cache_file_raw']));
       } else {
         $this->add_debug_item("Cache file doesn't exist or is older than cachetime.");
@@ -108,7 +109,7 @@
       $this->add_debug_item('Fetching fresh tweets using Twitter API.');
 
       require_once(dirname(__FILE__) . '/lib/tmhOAuth/tmhOAuth.php');
-      
+
       // Creates a tmhOAuth object.
       $this->tmhOAuth = new tmhOAuth(array(
         'consumer_key'    => $this->options['consumer_key'],
@@ -119,7 +120,8 @@
 
       // Request Twitter timeline.
       $params = array(
-        'screen_name' => $this->options['twitter_screen_name']
+        'screen_name' => $this->options['twitter_screen_name'],
+        'count' => $this->options['tweets_to_retrieve'],
       );
       if ($this->options['ignore_retweets']) {
         $params['include_rts'] = 'false';
@@ -130,7 +132,7 @@
       $response_code = $this->tmhOAuth->request('GET', $this->tmhOAuth->url('1.1/statuses/user_timeline.json'), $params);
 
       $this->add_debug_item('tmhOAuth response code: ' . $response_code);
-      
+
       if ($response_code == 200) {
         $data = json_decode($this->tmhOAuth->response['response'], true);
 
@@ -149,14 +151,14 @@
         // Close the twitter wrapping element.
         $html .= $this->options['twitter_wrap_close'];
 
-        // Save the formatted tweet list to a file. 
+        // Save the formatted tweet list to a file.
         $file = fopen($this->options['cache_file'], 'w');
-        fwrite($file, $html); 
+        fwrite($file, $html);
         fclose($file);
 
-        // Save the raw data array to a file. 
+        // Save the raw data array to a file.
         $file = fopen($this->options['cache_file_raw'], 'w');
-        fwrite($file, serialize($data)); 
+        fwrite($file, serialize($data));
         fclose($file);
 
         $this->tweet_list = $html;
@@ -188,18 +190,18 @@
         switch ($time_diff) {
           case ($time_diff < 60):
             $display_time = $time_diff . ' ' . $this->options['twitter_date_text'][0] . ' ' . $this->options['twitter_date_text'][4];
-            break;      
+            break;
           case ($time_diff >= 60 && $time_diff < 3600):
             $min = floor($time_diff/60);
             $display_time = $min . ' ' . $this->options['twitter_date_text'][1] . ' ' . $this->options['twitter_date_text'][4];
-            break;      
+            break;
           case ($time_diff >= 3600 && $time_diff < 86400):
             $hour = floor($time_diff/3600);
             $display_time = $this->options['twitter_date_text'][2] . ' ' . $hour . ' ' . $this->options['twitter_date_text'][3];
             if ($hour > 1){ $display_time .= 's'; }
             $display_time .= ' ' . $this->options['twitter_date_text'][4];
-            break;          
-          default: 
+            break;
+          default:
             $format = str_replace('%O', date('S', $tweet_time), $this->options['date_format']);
             $display_time = strftime($format, $tweet_time);
             break;
@@ -275,4 +277,3 @@
     }
 
 }
-?>
