@@ -50,12 +50,13 @@ Here is a full list of options, and their default values:
     'cache_file'            => dirname(__FILE__) . '/cache/twitter.txt', // Where on the server to save the cached formatted tweets
     'cache_file_raw'        => dirname(__FILE__) . '/cache/twitter-array.txt', // Where on the server to save the cached raw tweets
     'cachetime'             => 60 * 60, // Seconds to cache feed (1 hour).
-    'tweets_to_display'     => 10, // How many tweets to fetch
+    'tweets_to_retrieve'    => 25, // Specifies the number of tweets to try and fetch, up to a maximum of 200
+    'tweets_to_display'     => 10, // Number of tweets to display
     'ignore_replies'        => true, // Ignore @replies
     'ignore_retweets'       => true, // Ignore retweets
     'twitter_style_dates'   => false, // Use twitter style dates e.g. 2 hours ago
     'twitter_date_text'     => array('seconds', 'minutes', 'about', 'hour', 'ago'),
-    'date_format'           => '%I:%M %p %b %d%O', // The defult date format e.g. 12:08 PM Jun 12th. See: http://php.net/manual/en/function.strftime.php
+    'date_format'           => '%I:%M %p %b %e%O', // The defult date format e.g. 12:08 PM Jun 12th. See: http://php.net/manual/en/function.strftime.php
     'date_lang'             => null, // Language for date e.g. 'fr_FR'. See: http://php.net/manual/en/function.setlocale.php
     'format'                => 'html', // Can be 'html' or 'array'
     'twitter_wrap_open'     => '<h2>Latest tweets</h2><ul id="twitter">',
@@ -82,7 +83,7 @@ You can change these file paths using the `cache_file` and `cache_file_raw` opti
 
 ## Debugging
 
-If you are experiencing problems using the plugin please set the `debug` option to `true`. This will set PHP's error reporting level to `E_ALL`, and will also display a debugging report.
+If you are experiencing problems using the script please set the `debug` option to `true`. This will set PHP's error reporting level to `E_ALL`, and will also display a debugging report.
 
 You can also fetch the debugging report as an array or HTML list, even when the `debug` option is set to `false`:
 
@@ -95,7 +96,7 @@ You can also fetch the debugging report as an array or HTML list, even when the 
 
 Pass raw tweet text to `autolink()` and  it will convert all usernames, hashtags and URLs to HTML links. 
 
-    $autolinked_tweet = autolink($tweet);
+    $autolinked_tweet = $TweetPHP->autolink($tweet);
 
 This might be handy if you want to process tweets yourself, using the array returned by `get_tweet_array()`.
 
@@ -103,3 +104,4 @@ This might be handy if you want to process tweets yourself, using the array retu
 
 - Feed parsing uses Matt Harris' [tmhOAuth](https://github.com/themattharris/tmhOAuth)
 - Hashtag/username parsing uses Mike Cochrane's [twitter-text-php](https://github.com/mikenz/twitter-text-php)
+- Other contributors: [Matt Pugh](https://github.com/mattpugh), [Dario Bauer](https://github.com/dariobauer)
