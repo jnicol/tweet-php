@@ -58,15 +58,9 @@ Here is a full list of options, and their default values:
     'twitter_date_text'     => array('seconds', 'minutes', 'about', 'hour', 'ago'),
     'date_format'           => '%I:%M %p %b %e%O', // The defult date format e.g. 12:08 PM Jun 12th. See: http://php.net/manual/en/function.strftime.php
     'date_lang'             => null, // Language for date e.g. 'fr_FR'. See: http://php.net/manual/en/function.setlocale.php
-    'format'                => 'html', // Can be 'html' or 'array'
-    'twitter_wrap_open'     => '<h2>Latest tweets</h2><ul id="twitter">',
-    'twitter_wrap_close'    => '</ul>',
-    'tweet_wrap_open'       => '<li><span class="status">',
-    'meta_wrap_open'        => '</span><span class="meta"> ',
-    'meta_wrap_close'       => '</span>',
-    'tweet_wrap_close'      => '</li>',
-    'error_message'         => 'Oops, our twitter feed is unavailable right now.',
-    'error_link_text'       => 'Follow us on Twitter',
+    'twitter_template'      => '<h2>Latest tweets</h2><ul id="twitter">{tweets}</ul>',
+    'tweet_template'        => '<li><span class="status">{tweet}</span><span class="meta"><a href="{link}">{date}</a></span></li>',
+    'error_template'        => '<h2>Latest tweets</h2><ul id="twitter"><li class="error">Our twitter feed is unavailable right now. <span class="meta"><a href="{profile_link}">Follow us on Twitter</a></span></li></ul>',
     'debug'                 => false
 
 ## Caching

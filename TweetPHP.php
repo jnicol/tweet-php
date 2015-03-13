@@ -3,7 +3,7 @@
   * TweetPHP
   *
   * @author Jonathan Nicol @f6design
-  * @version 1.1.1
+  * @version 1.2.0
   * @license The MIT License http://opensource.org/licenses/mit-license.php
   * @link  http://f6design.com/journal/2013/06/20/tweetphp-display-tweets-on-your-website-using-php/
   *
@@ -59,15 +59,9 @@
           'twitter_date_text'     => array('seconds', 'minutes', 'about', 'hour', 'ago'),
           'date_format'           => '%I:%M %p %b %e%O', // The defult date format e.g. 12:08 PM Jun 12th. See: http://php.net/manual/en/function.strftime.php
           'date_lang'             => null, // Language for date e.g. 'fr_FR'. See: http://php.net/manual/en/function.setlocale.php
-          'format'                => 'html', // Can be 'html' or 'array'
-          'twitter_wrap_open'     => '<h2>Latest tweets</h2><ul id="twitter">',
-          'twitter_wrap_close'    => '</ul>',
-          'tweet_wrap_open'       => '<li><span class="status">',
-          'meta_wrap_open'        => '</span><span class="meta"> ',
-          'meta_wrap_close'       => '</span>',
-          'tweet_wrap_close'      => '</li>',
-          'error_message'         => 'Oops, our twitter feed is unavailable right now.',
-          'error_link_text'       => 'Follow us on Twitter',
+          'twitter_template'      => '<h2>Latest tweets</h2><ul id="twitter">{tweets}</ul>',
+          'tweet_template'        => '<li><span class="status">{tweet}</span><span class="meta"><a href="{link}">{date}</a></span></li>',
+          'error_template'        => '<h2>Latest tweets</h2><ul id="twitter"><li class="error">Our twitter feed is unavailable right now. <span class="meta"><a href="{profile_link}">Follow us on Twitter</a></span></li></ul>',
           'debug'                 => false
         ),
         $options
@@ -110,7 +104,7 @@
       // In case the feed did not parse or load correctly, show a link to the Twitter account.
       if (!$this->tweet_found) {
         $this->add_debug_item('No tweets were found. error_message will be displayed.');
-        $this->tweet_list = $this->options['twitter_wrap_open'] . $this->options['tweet_wrap_open'] . $this->options['error_message'] . ' ' . $this->options['meta_wrap_open'] .'<a href="http://twitter.com/' . $this->options['twitter_screen_name'] . '">' . $this->options['error_link_text'] . '</a>' . $this->options['meta_wrap_close'] . $this->options['tweet_wrap_close'] . $this->options['twitter_wrap_close'];
+        $this->tweet_list = str_replace('{profile_link}', 'http://twitter.com/' . $this->options['twitter_screen_name'], $this->options['error_template']);
         $this->tweet_array = array('Error fetching or loading tweets');
       }
     }
@@ -149,12 +143,11 @@
       if ($response_code == 200) {
         $data = json_decode($this->tmhOAuth->response['response'], true);
 
-        // Open the twitter wrapping element.
-        $html = $this->options['twitter_wrap_open'];
+        $tweets_html = '';
 
         // Iterate over tweets.
         foreach($data as $tweet) {
-          $html .=  $this->parse_tweet($tweet);
+          $tweets_html .=  $this->parse_tweet($tweet);
           // If we have processed enough tweets, stop.
           if ($this->tweet_count >= $this->options['tweets_to_display']){
             break;
@@ -162,7 +155,7 @@
         }
 
         // Close the twitter wrapping element.
-        $html .= $this->options['twitter_wrap_close'];
+        $html = str_replace('{tweets}', $tweets_html, $this->options['twitter_template']);
 
         if ($this->options['enable_cache']) {
           // Save the formatted tweet list to a file.
@@ -227,7 +220,12 @@
       }
 
       $href = 'http://twitter.com/' . $tweet['user']['screen_name'] . '/status/' . $tweet['id_str'];
-      return $this->options['tweet_wrap_open'] . $tweet_text . $this->options['meta_wrap_open'] . '<a href="' . $href . '">' . $display_time . '</a>' . $this->options['meta_wrap_close'] . $this->options['tweet_wrap_close'];
+      $output = str_replace('{tweet}',  $tweet_text, $this->options['tweet_template']);
+      $output = str_replace('{link}',  $href, $output);
+      $output = str_replace('{date}',   $display_time, $output);
+
+      return $output;
+      // return $this->options['tweet_wrap_open'] . $tweet_text . $this->options['meta_wrap_open'] . '<a href="' . $href . '">' . $display_time . '</a>' . $this->options['meta_wrap_close'] . $this->options['tweet_wrap_close'];
     }
 
     /**
