@@ -3,7 +3,7 @@
   * TweetPHP
   *
   * @author Jonathan Nicol @f6design
-  * @version 1.2.0
+  * @version 1.2.1
   * @license The MIT License http://opensource.org/licenses/mit-license.php
   * @link  http://f6design.com/journal/2013/06/20/tweetphp-display-tweets-on-your-website-using-php/
   *
@@ -60,8 +60,9 @@
           'date_format'           => '%I:%M %p %b %e%O', // The defult date format e.g. 12:08 PM Jun 12th. See: http://php.net/manual/en/function.strftime.php
           'date_lang'             => null, // Language for date e.g. 'fr_FR'. See: http://php.net/manual/en/function.setlocale.php
           'twitter_template'      => '<h2>Latest tweets</h2><ul id="twitter">{tweets}</ul>',
-          'tweet_template'        => '<li><span class="status">{tweet}</span><span class="meta"><a href="{link}">{date}</a></span></li>',
-          'error_template'        => '<h2>Latest tweets</h2><ul id="twitter"><li class="error">Our twitter feed is unavailable right now. <span class="meta"><a href="{profile_link}">Follow us on Twitter</a></span></li></ul>',
+          'tweet_template'        => '<li><span class="status">{tweet}</span> <span class="meta"><a href="{link}">{date}</a></span></li>',
+          'error_message'         => 'Oops, our twitter feed is unavailable right now.',
+          'error_link_text'       => 'Follow us on Twitter',
           'debug'                 => false
         ),
         $options
@@ -104,7 +105,11 @@
       // In case the feed did not parse or load correctly, show a link to the Twitter account.
       if (!$this->tweet_found) {
         $this->add_debug_item('No tweets were found. error_message will be displayed.');
-        $this->tweet_list = str_replace('{profile_link}', 'http://twitter.com/' . $this->options['twitter_screen_name'], $this->options['error_template']);
+        $html = str_replace('{tweet}',  $this->options['error_message'], $this->options['tweet_template']);
+        $html = str_replace('{link}',  $this->options['error_message'], $html);
+        $html = str_replace('{tweet}', 'http://twitter.com/' . $this->options['twitter_screen_name'], $html);
+        $html = str_replace('{date}', $this->options['error_link_text'], $html);
+        $this->tweet_list = str_replace('{tweets}', $html, $this->options['twitter_template']);
         $this->tweet_array = array('Error fetching or loading tweets');
       }
     }
