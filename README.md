@@ -47,8 +47,7 @@ Here is a full list of options, and their default values:
     'access_token'          => '',
     'access_token_secret'   => '',
     'twitter_screen_name'   => '',
-    'cache_file'            => dirname(__FILE__) . '/cache/twitter.txt', // Where on the server to save the cached formatted tweets
-    'cache_file_raw'        => dirname(__FILE__) . '/cache/twitter-array.txt', // Where on the server to save the cached raw tweets
+    'cache_dir'             => dirname(__FILE__) . '/cache/', // Where on the server to save cached tweets
     'cachetime'             => 60 * 60, // Seconds to cache feed (1 hour).
     'tweets_to_retrieve'    => 25, // Specifies the number of tweets to try and fetch, up to a maximum of 200
     'tweets_to_display'     => 10, // Number of tweets to display
@@ -77,9 +76,9 @@ When the user timeline is first loaded, the resultant HTML list is saved as a te
 
 The raw Twitter response is saved as a serialized array in: `cache/twitter-array.txt`
 
-You can change these file paths using the `cache_file` and `cache_file_raw` options. For example, to set a path from your root public directory try:
+You can change these file paths using the `cache_dir` option. For example, to set a path from your root public directory try:
 
-    $_SERVER['DOCUMENT_ROOT'] . '/path/to/my/cache/dir/filename.txt'
+    $_SERVER['DOCUMENT_ROOT'] . '/path/to/my/cache/dir/'
 
 ## Debugging
 
