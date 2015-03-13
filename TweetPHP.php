@@ -3,7 +3,7 @@
   * TweetPHP
   *
   * @author Jonathan Nicol @f6design
-  * @version 1.1.0
+  * @version 1.1.1
   * @license The MIT License http://opensource.org/licenses/mit-license.php
   * @link  http://f6design.com/journal/2013/06/20/tweetphp-display-tweets-on-your-website-using-php/
   *
@@ -48,6 +48,7 @@
           'access_token'          => '',
           'access_token_secret'   => '',
           'twitter_screen_name'   => '',
+          'enable_cache'          => true,
           'cache_dir'             => dirname(__FILE__) . '/cache/', // Where on the server to save cached tweets
           'cachetime'             => 60 * 60, // Seconds to cache feed (1 hour).
           'tweets_to_retrieve'    => 25, // Specifies the number of tweets to try and fetch, up to a maximum of 200
@@ -80,25 +81,31 @@
         setlocale(LC_ALL, $this->options['date_lang']);
       }
 
-      if (!file_exists($this->options['cache_dir'])) {
-        mkdir($this->options['cache_dir'], 0755, true);
-      }
-      $this->cache_file = $this->options['cache_dir'] . 'twitter.txt';
-      $this->cache_file_raw = $this->options['cache_dir'] . 'twitter-array.txt';
-      $cache_file_timestamp = ((file_exists($this->cache_file))) ? filemtime($this->cache_file) : 0;
-      $this->add_debug_item('Cache expiration timestamp: ' . (time() - $this->options['cachetime']));
-      $this->add_debug_item('Cache file timestamp: ' . $cache_file_timestamp);
-
-      // Show file from cache if still valid.
-      if (time() - $this->options['cachetime'] < $cache_file_timestamp) {
-        $this->tweet_found = true;
-        $this->add_debug_item('Cache file is newer than cachetime.');
-        $this->tweet_list = file_get_contents($this->cache_file);
-        $this->tweet_array = unserialize(file_get_contents($this->cache_file_raw));
+      if ($this->options['enable_cache']) {
+        if (!file_exists($this->options['cache_dir'])) {
+          mkdir($this->options['cache_dir'], 0755, true);
+        }
+        $this->cache_file = $this->options['cache_dir'] . 'twitter.txt';
+        $this->cache_file_raw = $this->options['cache_dir'] . 'twitter-array.txt';
+        $cache_file_timestamp = ((file_exists($this->cache_file))) ? filemtime($this->cache_file) : 0;
+        $this->add_debug_item('Cache expiration timestamp: ' . (time() - $this->options['cachetime']));
+        $this->add_debug_item('Cache file timestamp: ' . $cache_file_timestamp);
+        
+        // Show file from cache if still valid.
+        if (time() - $this->options['cachetime'] < $cache_file_timestamp) {
+          $this->tweet_found = true;
+          $this->add_debug_item('Cache file is newer than cachetime.');
+          $this->tweet_list = file_get_contents($this->cache_file);
+          $this->tweet_array = unserialize(file_get_contents($this->cache_file_raw));
+        } else {
+          $this->add_debug_item("Cache file doesn't exist or is older than cachetime.");
+          $this->fetch_tweets();
+        }
       } else {
-        $this->add_debug_item("Cache file doesn't exist or is older than cachetime.");
+        $this->add_debug_item('Caching is disabled.');
         $this->fetch_tweets();
       }
+
 
       // In case the feed did not parse or load correctly, show a link to the Twitter account.
       if (!$this->tweet_found) {
@@ -157,15 +164,17 @@
         // Close the twitter wrapping element.
         $html .= $this->options['twitter_wrap_close'];
 
-        // Save the formatted tweet list to a file.
-        $file = fopen($this->cache_file, 'w');
-        fwrite($file, $html);
-        fclose($file);
+        if ($this->options['enable_cache']) {
+          // Save the formatted tweet list to a file.
+          $file = fopen($this->cache_file, 'w');
+          fwrite($file, $html);
+          fclose($file);
 
-        // Save the raw data array to a file.
-        $file = fopen($this->cache_file_raw, 'w');
-        fwrite($file, serialize($data));
-        fclose($file);
+          // Save the raw data array to a file.
+          $file = fopen($this->cache_file_raw, 'w');
+          fwrite($file, serialize($data));
+          fclose($file);
+        }
 
         $this->tweet_list = $html;
         $this->tweet_array = $data;

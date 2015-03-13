@@ -47,6 +47,7 @@ Here is a full list of options, and their default values:
     'access_token'          => '',
     'access_token_secret'   => '',
     'twitter_screen_name'   => '',
+    'enable_cache'          => true,
     'cache_dir'             => dirname(__FILE__) . '/cache/', // Where on the server to save cached tweets
     'cachetime'             => 60 * 60, // Seconds to cache feed (1 hour).
     'tweets_to_retrieve'    => 25, // Specifies the number of tweets to try and fetch, up to a maximum of 200
