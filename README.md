@@ -60,8 +60,7 @@ Here is a full list of options, and their default values:
     'date_lang'             => null, // Language for date e.g. 'fr_FR'. See: http://php.net/manual/en/function.setlocale.php
     'twitter_template'      => '<h2>Latest tweets</h2><ul id="twitter">{tweets}</ul>',
     'tweet_template'        => '<li><span class="status">{tweet}</span><span class="meta"><a href="{link}">{date}</a></span></li>',
-    'error_message'         => 'Oops, our twitter feed is unavailable right now.',
-    'error_link_text'       => 'Follow us on Twitter',
+    'error_template'        => '<li><span class="status">Our twitter feed is unavailable right now.</span> <span class="meta"><a href="{link}">Follow us on Twitter</a></span></li>',
     'debug'                 => false
 
 ## Caching
