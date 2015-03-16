@@ -3,7 +3,7 @@
   * TweetPHP
   *
   * @author Jonathan Nicol @f6design
-  * @version 1.3.0
+  * @version 1.3.1
   * @license The MIT License http://opensource.org/licenses/mit-license.php
   * @link  http://f6design.com/journal/2013/06/20/tweetphp-display-tweets-on-your-website-using-php/
   *
@@ -221,16 +221,15 @@
       }
 
       $href = 'http://twitter.com/' . $tweet['user']['screen_name'] . '/status/' . $tweet['id_str'];
-      $output = str_replace('{tweet}',  $tweet_text, $this->options['tweet_template']);
-      $output = str_replace('{link}',  $href, $output);
-      $output = str_replace('{date}',   $display_time, $output);
+      $output = str_replace('{tweet}', $tweet_text, $this->options['tweet_template']);
+      $output = str_replace('{link}', $href, $output);
+      $output = str_replace('{date}', $display_time, $output);
 
       return $output;
-      // return $this->options['tweet_wrap_open'] . $tweet_text . $this->options['meta_wrap_open'] . '<a href="' . $href . '">' . $display_time . '</a>' . $this->options['meta_wrap_close'] . $this->options['tweet_wrap_close'];
     }
 
     /**
-     * Add a debuggin item.
+     * Add a debugging item.
      */
     private function add_debug_item ($msg) {
       array_push($this->debug_report, $msg);
