@@ -84,7 +84,7 @@
         $cache_file_timestamp = ((file_exists($this->cache_file))) ? filemtime($this->cache_file) : 0;
         $this->add_debug_item('Cache expiration timestamp: ' . (time() - $this->options['cachetime']));
         $this->add_debug_item('Cache file timestamp: ' . $cache_file_timestamp);
-        
+
         // Show file from cache if still valid.
         if (time() - $this->options['cachetime'] < $cache_file_timestamp) {
           $this->tweet_found = true;
@@ -194,7 +194,7 @@
 
       if ($this->options['twitter_style_dates']){
         // Convert tweet timestamp into Twitter style date ("About 2 hours ago")
-        $current_time = time();
+        $current_time = strtotime('now') + $utc_offset;
         $time_diff = abs($current_time - $tweet_time);
         switch ($time_diff) {
           case ($time_diff < 60):
