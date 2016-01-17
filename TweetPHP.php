@@ -187,6 +187,7 @@
       // Format tweet text
       $tweet_text_raw = $tweet['text'];
       $tweet_text = $this->autolink($tweet_text_raw);
+      $img_url = $tweet["entities"]["media"][0]["media_url"];
 
       // Tweet date is in GMT. Convert to UNIX timestamp in the local time of the tweeter.
       $utc_offset = $tweet['user']['utc_offset'];
@@ -224,6 +225,7 @@
       $output = str_replace('{tweet}', $tweet_text, $this->options['tweet_template']);
       $output = str_replace('{link}', $href, $output);
       $output = str_replace('{date}', $display_time, $output);
+      $output = str_replace('{img}', $img_url, $output);
 
       return $output;
     }
