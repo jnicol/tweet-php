@@ -438,12 +438,12 @@ class Twitter_Autolink extends Twitter_Regex {
       $postfix = substr($slash_listname, 26);
     } else {
       # Replace the username
-      $element = $at . $username;
+      $element = $username;
       $class = $this->class_user;
       $url = $this->url_base_user . $element;
       $postfix = '';
     }
-    return $before . $this->wrap($url, $class, $element) . $postfix . $after;
+    return $before . $this->wrap($url, $class, $at . $element) . $postfix . $after;
   }
 
 }
