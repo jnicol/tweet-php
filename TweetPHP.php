@@ -72,6 +72,11 @@
         error_reporting(E_ALL);
       }
 
+      // Check for Windows to find and replace the %e modifier with %#d, since Windows' %e implementation is broken
+      if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
+        $this->options['date_format'] = str_replace('%e', '%#d', $this->options['date_format']);
+      }
+
       if ($this->options['date_lang']) {
         setlocale(LC_ALL, $this->options['date_lang']);
       }
