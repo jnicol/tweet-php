@@ -443,7 +443,7 @@ class Twitter_Autolink extends Twitter_Regex {
       $url = $this->url_base_user . $element;
       $postfix = '';
     }
-    return $before . $at . $this->wrap($url, $class, $element) . $postfix . $after;
+    return $before . $this->wrap($url, $class, $at . $element) . $postfix . $after;
   }
 
 }
