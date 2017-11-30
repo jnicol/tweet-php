@@ -62,7 +62,7 @@
           'twitter_template'      => '<h2>Latest tweets</h2><ul id="twitter">{tweets}</ul>',
           'tweet_template'        => '<li><span class="status">{tweet}</span> <span class="meta"><a href="{link}">{date}</a></span></li>',
           'error_template'        => '<li><span class="status">Our twitter feed is unavailable right now.</span> <span class="meta"><a href="{link}">Follow us on Twitter</a></span></li>',
-          'nofollow_links'        => false,
+          'nofollow_links'        => false, // Add rel="nofollow" attribute to links
           'debug'                 => false
         ),
         $options
@@ -225,9 +225,6 @@
       $output = str_replace('{tweet}', $tweet_text, $this->options['tweet_template']);
       $output = str_replace('{link}', $href, $output);
       $output = str_replace('{date}', $display_time, $output);
-      if ($this->options['nofollow_links']) {
-          $output = str_replace('<a ', '<a rel="nofollow" ', $output);
-      }
 
       return $output;
     }
@@ -266,7 +263,9 @@
       require_once(dirname(__FILE__) . '/lib/twitter-text-php/lib/Twitter/Autolink.php');
 
       $autolinked_tweet = Twitter_Autolink::create($tweet, false)
-        ->setNoFollow(false)->setExternal(false)->setTarget('')
+        ->setNoFollow($this->options['nofollow_links'])
+        ->setExternal(false)
+        ->setTarget('')
         ->setUsernameClass('')
         ->setHashtagClass('')
         ->setURLClass('')

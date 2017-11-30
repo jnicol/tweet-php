@@ -61,6 +61,7 @@ Here is a full list of options, and their default values:
     'twitter_template'      => '<h2>Latest tweets</h2><ul id="twitter">{tweets}</ul>',
     'tweet_template'        => '<li><span class="status">{tweet}</span><span class="meta"><a href="{link}">{date}</a></span></li>',
     'error_template'        => '<li><span class="status">Our twitter feed is unavailable right now.</span> <span class="meta"><a href="{link}">Follow us on Twitter</a></span></li>',
+    'nofollow_links'        => false, // Add rel="nofollow" attribute to links
     'debug'                 => false
 
 ## Caching
@@ -98,4 +99,4 @@ This might be handy if you want to process tweets yourself, using the array retu
 
 - Feed parsing uses Matt Harris' [tmhOAuth](https://github.com/themattharris/tmhOAuth)
 - Hashtag/username parsing uses Mike Cochrane's [twitter-text-php](https://github.com/mikenz/twitter-text-php)
-- Other contributors: [Matt Pugh](https://github.com/mattpugh), [Dario Bauer](https://github.com/dariobauer)
+- Other contributors: [Matt Pugh](https://github.com/mattpugh), [Dario Bauer](https://github.com/dariobauer, [Lee Collings](https://github.com/leecollings), [Dom Abbott](https://github.com/wcdom)
