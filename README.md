@@ -19,7 +19,7 @@ After creating your app you will need to take note of following API values: "Con
 
 ## Usage
 
-Your API credentials values can be passed as options to the class constructor, along with the any other configuration options:
+Your API credentials can be passed as options to the class constructor, along with the any other configuration options:
 
     $TweetPHP = new TweetPHP(array(
       'consumer_key'        => 'xxxxxxxxxxxxxxxxxxxxx',
