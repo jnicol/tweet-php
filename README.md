@@ -56,8 +56,6 @@ Here is a full list of options, and their default values:
     'cachetime'             => 60 * 60, // Seconds to cache feed (1 hour).
     'tweets_to_retrieve'    => 25, // Specifies the number of tweets to try and fetch, up to a maximum of 200
     'tweets_to_display'     => 10, // Number of tweets to display
-    'ignore_replies'        => true, // Ignore @replies
-    'ignore_retweets'       => true, // Ignore retweets
     'twitter_style_dates'   => false, // Use twitter style dates e.g. 2 hours ago
     'twitter_date_text'     => array('seconds', 'minutes', 'about', 'hour', 'ago'),
     'date_format'           => '%I:%M %p %b %e%O', // The defult date format e.g. 12:08 PM Jun 12th. See: http://php.net/manual/en/function.strftime.php
