@@ -26,7 +26,7 @@ Your API credentials can be passed as options to the class constructor, along wi
       'consumer_secret'     => 'xxxxxxxxxxxxxxxxxxxxx',
       'access_token'        => 'xxxxxxxxxxxxxxxxxxxxx',
       'access_token_secret' => 'xxxxxxxxxxxxxxxxxxxxx',
-      'api_params'          => array('screen_name' => 'yourusername')
+      'api_params'          => array('screen_name' => 'twitteruser')
     ));
 
 Then you can display the results like so:
