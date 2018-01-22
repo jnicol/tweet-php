@@ -47,14 +47,13 @@
           'consumer_secret'       => '',
           'access_token'          => '',
           'access_token_secret'   => '',
-          'twitter_screen_name'   => '',
+          'api_endpoint'          => 'statuses/user_timeline',
+          'api_params'            => array(),
           'enable_cache'          => true,
           'cache_dir'             => dirname(__FILE__) . '/cache/', // Where on the server to save cached tweets
           'cachetime'             => 60 * 60, // Seconds to cache feed (1 hour).
           'tweets_to_retrieve'    => 25, // Specifies the number of tweets to try and fetch, up to a maximum of 200
           'tweets_to_display'     => 10, // Number of tweets to display
-          'ignore_replies'        => true, // Ignore @replies
-          'ignore_retweets'       => true, // Ignore retweets
           'twitter_style_dates'   => false, // Use twitter style dates e.g. 2 hours ago
           'twitter_date_text'     => array('seconds', 'minutes', 'about', 'hour', 'ago'),
           'date_format'           => '%I:%M %p %b %e%O', // The defult date format e.g. 12:08 PM Jun 12th. See: http://php.net/manual/en/function.strftime.php
@@ -63,7 +62,10 @@
           'tweet_template'        => '<li><span class="status">{tweet}</span> <span class="meta"><a href="{link}">{date}</a></span></li>',
           'error_template'        => '<li><span class="status">Our twitter feed is unavailable right now.</span> <span class="meta"><a href="{link}">Follow us on Twitter</a></span></li>',
           'nofollow_links'        => false, // Add rel="nofollow" attribute to links
-          'debug'                 => false
+          'debug'                 => false,
+          'twitter_screen_name'   => '', // Deprecated. Use api_params.
+          'ignore_replies'        => true, // Deprecated. Use api_params.
+          'ignore_retweets'       => true // Deprecated. Use api_params.
         ),
         $options
       );
@@ -106,7 +108,6 @@
         $this->fetch_tweets();
       }
 
-
       // In case the feed did not parse or load correctly, show a link to the Twitter account.
       if (!$this->tweet_found) {
         $this->add_debug_item('No tweets were found. error_message will be displayed.');
@@ -132,23 +133,26 @@
         'secret'          => $this->options['access_token_secret']
       ));
 
+      // Set Twitter API parameters
+      $params = $this->options['api_params'];
+      $params['count'] = $this->options['tweets_to_retrieve'];
+      // Legacy param options for backwards compatibility.
+      if (!empty($this->options['twitter_screen_name'])) {
+        $params['screen_name'] = $this->options['twitter_screen_name'];
+      }
+      $params['include_rts'] = $this->options['ignore_retweets'] ? 'false' : 'true';
+      $params['exclude_replies'] = $this->options['ignore_replies'] ? 'true' : 'false';
+
       // Request Twitter timeline.
-      $params = array(
-        'screen_name' => $this->options['twitter_screen_name'],
-        'count' => $this->options['tweets_to_retrieve'],
-      );
-      if ($this->options['ignore_retweets']) {
-        $params['include_rts'] = 'false';
-      }
-      if ($this->options['ignore_replies']) {
-        $params['exclude_replies'] = 'true';
-      }
-      $response_code = $this->tmhOAuth->request('GET', $this->tmhOAuth->url('1.1/statuses/user_timeline.json'), $params);
+      $response_code = $this->tmhOAuth->request('GET', $this->tmhOAuth->url('1.1/' . $this->options['api_endpoint'] . '.json'), $params);
 
       $this->add_debug_item('tmhOAuth response code: ' . $response_code);
 
       if ($response_code == 200) {
-        $data = json_decode($this->tmhOAuth->response['response'], true);
+        $response = json_decode($this->tmhOAuth->response['response'], true);
+
+        // Some twitter endpoints (e.g. search/tweets) store tweets in a `statuses` array.
+        $data = array_key_exists('statuses', $response) ? $response['statuses'] : $responsedata;
 
         $tweets_html = '';
 

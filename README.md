@@ -1,31 +1,32 @@
 # TweetPHP
 
-A PHP class for fetching tweets from a Twitter user's timeline, and rendering them as an HTML list.
+A PHP class for querying the Twitter API and rendering the returned tweets as an HTML list.
 
 ## Features
 
 - Works with Twitter API v1.1
 - Tweets are cached to avoid exceeding Twitter’s API request rate limits
-- A fallback is provided in case the twitter feed fails to load
-- Retweets and @replies can optionally be ignored
+- A fallback is provided in case the API request fails
 - A configuration parameter allows you to specify how many tweets are displayed
 - Dates can optionally be displayed in “Twitter style”, e.g. “12 minutes ago”
 - You can customize the HTML that wraps your tweets, tweet status and meta information
 
+## Authentication
+
+To interact with Twitter's API you will need to create a Twitter application at: https://dev.twitter.com/apps
+
+After creating your app you will need to take note of following API values: "Consumer key", "Consumer secret", "Access token", "Access token secret"
+
 ## Usage
 
-To interact with Twitter's API you will need an API KEY, which you can create at: https://dev.twitter.com/apps
-
-After creating your API Key you will need to take note of following values: "Consumer key", "Consumer secret", "Access token", "Access token secret"
-
-Those values can be passed as options to the class constructor, along with the Twitter screen name you wish to query:
+Your API credentials values can be passed as options to the class constructor, along with the any other configuration options:
 
     $TweetPHP = new TweetPHP(array(
-      'consumer_key'              => 'xxxxxxxxxxxxxxxxxxxxx',
-      'consumer_secret'           => 'xxxxxxxxxxxxxxxxxxxxx',
-      'access_token'              => 'xxxxxxxxxxxxxxxxxxxxx',
-      'access_token_secret'       => 'xxxxxxxxxxxxxxxxxxxxx',
-      'twitter_screen_name'       => 'yourusername'
+      'consumer_key'        => 'xxxxxxxxxxxxxxxxxxxxx',
+      'consumer_secret'     => 'xxxxxxxxxxxxxxxxxxxxx',
+      'access_token'        => 'xxxxxxxxxxxxxxxxxxxxx',
+      'access_token_secret' => 'xxxxxxxxxxxxxxxxxxxxx',
+      'api_params'          => array('screen_name' => 'yourusername')
     ));
 
 Then you can display the results like so:
@@ -38,7 +39,9 @@ You can also retreive the raw data received from Twitter:
 
 ## Options
 
-Options can be overridden by passing an array of key/value pairs to the class constructor. At a minimum you must set the `consumer_key`, `consumer_secret`, `access_token`, `access_token_secret` and `twitter_screen_name` options, as shown above.
+Options can be overridden by passing an array of key/value pairs to the class constructor. At a minimum you must set the `consumer_key`, `consumer_secret`, `access_token`, `access_token_secret` options, as shown above.
+
+You should also set an `api_endpoint` and `api_params`, an array of parameters to include with the call to the Twitter API.
 
 Here is a full list of options, and their default values:
 
@@ -46,7 +49,8 @@ Here is a full list of options, and their default values:
     'consumer_secret'       => '',
     'access_token'          => '',
     'access_token_secret'   => '',
-    'twitter_screen_name'   => '',
+    'api_endpoint'          => 'statuses/user_timeline',
+    'api_params'            => array(),
     'enable_cache'          => true,
     'cache_dir'             => dirname(__FILE__) . '/cache/', // Where on the server to save cached tweets
     'cachetime'             => 60 * 60, // Seconds to cache feed (1 hour).
@@ -63,6 +67,58 @@ Here is a full list of options, and their default values:
     'error_template'        => '<li><span class="status">Our twitter feed is unavailable right now.</span> <span class="meta"><a href="{link}">Follow us on Twitter</a></span></li>',
     'nofollow_links'        => false, // Add rel="nofollow" attribute to links
     'debug'                 => false
+
+### Deprecated options
+
+The following options have been deprecated. You should use `api_params` to set API parameters instead.
+
+    'twitter_screen_name'   => ''
+    'ignore_replies'        => true
+    'ignore_retweets'       => true
+
+## API endpoints
+
+Since TweetPHP uses Twitter's [Application-only](https://developer.twitter.com/en/docs/basics/authentication/overview/application-only) API authentication model, it can only access certain GET endpoints.
+
+It has been tested with the statuses/user_timeline endpoint (its default) and the search/tweets endpoint.
+
+## Examples
+
+### Fetch a user's timeline
+    
+    <?php
+    require_once('TweetPHP.php');
+    
+    $TweetPHP = new TweetPHP(array(
+      'consumer_key'        => 'xxxxxxxxxxxxxxxxxxxxx',
+      'consumer_secret'     => 'xxxxxxxxxxxxxxxxxxxxx',
+      'access_token'        => 'xxxxxxxxxxxxxxxxxxxxx',
+      'access_token_secret' => 'xxxxxxxxxxxxxxxxxxxxx',
+      'api_endpoint'        => 'statuses/user_timeline',
+      'api_params'          => array('screen_name' => 'twitteruser')
+    ));
+    
+    echo $TweetPHP->get_tweet_list(); 
+    ?>
+
+Note that the `api_endpoint` option could be omitted in this case, since 'statuses/user_timeline' is its default value. 
+
+### Search for a hashtag
+
+    <?php
+    require_once('TweetPHP.php');
+    
+    $TweetPHP = new TweetPHP(array(
+      'consumer_key'        => 'xxxxxxxxxxxxxxxxxxxxx',
+      'consumer_secret'     => 'xxxxxxxxxxxxxxxxxxxxx',
+      'access_token'        => 'xxxxxxxxxxxxxxxxxxxxx',
+      'access_token_secret' => 'xxxxxxxxxxxxxxxxxxxxx',
+      'api_endpoint'        => 'search/tweets',
+      'api_params'          => array('q' => '%23php', 'result_type'=>'latest')
+    ));
+    
+    echo $TweetPHP->get_tweet_list(); 
+    ?>
 
 ## Caching
 
