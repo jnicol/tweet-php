@@ -112,7 +112,7 @@ Note that the `api_endpoint` option could be omitted in this case, since 'status
       'access_token'        => 'xxxxxxxxxxxxxxxxxxxxx',
       'access_token_secret' => 'xxxxxxxxxxxxxxxxxxxxx',
       'api_endpoint'        => 'search/tweets',
-      'api_params'          => array('q' => '%23php', 'result_type'=>'latest')
+      'api_params'          => array('q' => '#php', 'result_type'=>'latest')
     ));
     
     echo $TweetPHP->get_tweet_list(); 
