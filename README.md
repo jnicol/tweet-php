@@ -1,6 +1,6 @@
 # TweetPHP
 
-A PHP class for querying the Twitter API and rendering the returned tweets as an HTML list.
+A PHP class for querying the Twitter API and rendering tweets as an HTML list.
 
 ## Features
 
