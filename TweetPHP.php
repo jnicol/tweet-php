@@ -92,7 +92,7 @@
         $cache_file_timestamp = ((file_exists($this->cache_file))) ? filemtime($this->cache_file) : 0;
         $this->add_debug_item('Cache expiration timestamp: ' . (time() - $this->options['cachetime']));
         $this->add_debug_item('Cache file timestamp: ' . $cache_file_timestamp);
-        
+
         // Show file from cache if still valid.
         if (time() - $this->options['cachetime'] < $cache_file_timestamp) {
           $this->tweet_found = true;
@@ -153,6 +153,80 @@
 
         // Some twitter endpoints (e.g. search/tweets) store tweets in a `statuses` array.
         $data = array_key_exists('statuses', $response) ? $response['statuses'] : $responsedata;
+
+        $tweets_html = '';
+
+        // Iterate over tweets.
+        foreach($data as $tweet) {
+          $tweets_html .=  $this->parse_tweet($tweet);
+          // If we have processed enough tweets, stop.
+          if ($this->tweet_count >= $this->options['tweets_to_display']){
+            break;
+          }
+        }
+
+        // Close the twitter wrapping element.
+        $html = str_replace('{tweets}', $tweets_html, $this->options['twitter_template']);
+
+        if ($this->options['enable_cache']) {
+          // Save the formatted tweet list to a file.
+          $file = fopen($this->cache_file, 'w');
+          fwrite($file, $html);
+          fclose($file);
+
+          // Save the raw data array to a file.
+          $file = fopen($this->cache_file_raw, 'w');
+          fwrite($file, serialize($data));
+          fclose($file);
+        }
+
+        $this->tweet_list = $html;
+        $this->tweet_array = $data;
+      } else {
+        $this->add_debug_item('Bad tmhOAuth response code.');
+      }
+    }
+
+
+   public function search_tweets($search){
+     $this->_search_tweets($search);
+   }
+
+   /**
+     * searches tweets using Twitter API
+     */
+    private function _search_tweets ($search) {
+      $this->add_debug_item('Searching fresh tweets using Twitter API.');
+
+      require_once(dirname(__FILE__) . '/lib/tmhOAuth/tmhOAuth.php');
+
+      // Creates a tmhOAuth object.
+      $this->tmhOAuth = new tmhOAuth(array(
+        'consumer_key'    => $this->options['consumer_key'],
+        'consumer_secret' => $this->options['consumer_secret'],
+        'token'           => $this->options['access_token'],
+        'secret'          => $this->options['access_token_secret']
+      ));
+
+      // Request Twitter timeline.
+      $params = array(
+        'screen_name' => $this->options['twitter_screen_name'],
+        'count' => $this->options['tweets_to_retrieve'],
+      );
+      if ($this->options['ignore_retweets']) {
+        $params['include_rts'] = 'false';
+      }
+      if ($this->options['ignore_replies']) {
+        $params['exclude_replies'] = 'true';
+      }
+      $params['q'] = $search;
+      $response_code = $this->tmhOAuth->request('GET', $this->tmhOAuth->url('1.1/search/tweets.json'), $params);
+
+      $this->add_debug_item('tmhOAuth response code: ' . $response_code);
+
+      if ($response_code == 200) {
+        $data = json_decode($this->tmhOAuth->response['response'], true);
+        $data = $data['statuses'];
 
         $tweets_html = '';
 
