@@ -152,7 +152,7 @@
         $response = json_decode($this->tmhOAuth->response['response'], true);
 
         // Some twitter endpoints (e.g. search/tweets) store tweets in a `statuses` array.
-        $data = array_key_exists('statuses', $response) ? $response['statuses'] : $responsedata;
+        $data = array_key_exists('statuses', $response) ? $response['statuses'] : $response;
 
         $tweets_html = '';
 
