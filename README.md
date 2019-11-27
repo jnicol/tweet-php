@@ -153,4 +153,4 @@ This might be handy if you want to process tweets yourself, using the array retu
 
 - Feed parsing uses Matt Harris' [tmhOAuth](https://github.com/themattharris/tmhOAuth)
 - Hashtag/username parsing uses Mike Cochrane's [twitter-text-php](https://github.com/mikenz/twitter-text-php)
-- Other contributors: [Matt Pugh](https://github.com/mattpugh), [Dario Bauer](https://github.com/dariobauer), [Lee Collings](https://github.com/leecollings), [Dom Abbott](https://github.com/wcdom)
+- Other contributors: [Matt Pugh](https://github.com/mattpugh), [Dario Bauer](https://github.com/dariobauer), [Lee Collings](https://github.com/leecollings), [Dom Abbott](https://github.com/domabbott92)
