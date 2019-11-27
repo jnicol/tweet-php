@@ -195,7 +195,8 @@
       $this->tweet_count++;
 
       // Format tweet text
-      $tweet_text_raw = $tweet['text'];
+      $text_field = isset($this->options["api_params"]["tweet_mode"]) && $this->options["api_params"]["tweet_mode"] == "extended" ? "full_text" : "text";
+      $tweet_text_raw = $tweet[$text_field];
       $tweet_text = $this->autolink($tweet_text_raw);
 
       // Tweet date is in GMT. Convert to UNIX timestamp in the local time of the tweeter.
