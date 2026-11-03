@@ -1,3 +1,6 @@
+> [!CAUTION]
+> This library is no longer maintained and will not work. Why are you still using Twitter anyway?
+
 # TweetPHP
 
 A PHP class for querying the Twitter API and rendering tweets as an HTML list.
