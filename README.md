@@ -1,5 +1,5 @@
 > [!CAUTION]
-> This library is no longer maintained and will not work. Why are you still using Twitter anyway?
+> This library is no longer maintained. Why are you still using Twitter anyway?
 
 # TweetPHP
 
